@@ -98,6 +98,18 @@ class TicTacToeGame:
         )
         return no_winner and all(played_moves)
     
+    def reset_game(self):
+        """
+        Reset the game state to play again
+        """
+
+        for row, row_content in enumerate(self._current_moves):
+            for col, _ in enumerate(row_content):
+                row_content[col] = Move(row, col)
+
+        self._has_winner = False
+        self.winner_combo = []
+    
     def toggle_player(self):
         """
         Return a toggled player
@@ -111,6 +123,7 @@ class TicTacToeBoard(tk.Tk):
         self.title('Tic-Tac-Toe Game')
         self._cells = {}
         self._game = game
+        self._create_menu()
         self._create_board_display()
         self._create_board_grid()
     
@@ -199,11 +212,15 @@ class TicTacToeBoard(tk.Tk):
         for button, coordinates in self._cells.items():
             if coordinates in self._game.winner_combo:
                 button.config(highlightbackground="red")
-    
+
     def reset_board(self):
-        """Reset the game's board to play again."""
+        """
+        Reset the game's board to play again
+        """
+
         self._game.reset_game()
         self._update_display(msg="Ready?")
+
         for button in self._cells.keys():
             button.config(highlightbackground="lightblue")
             button.config(text="")
